@@ -6,7 +6,7 @@ service beeroclock
         log_on_failure = HOST
         log_on_success = HOST
         log_type = FILE /var/log/beeroclock.log
-        port = 18080
+        port = 28080
         protocol = tcp
         server = /var/lib/beeroclock/service.sh
         socket_type = stream

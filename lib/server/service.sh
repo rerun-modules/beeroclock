@@ -1,9 +1,19 @@
 #!/bin/bash
 read -r request
-while true; do
-  read -r header
-  [ "$header" == $'\r' ] && break
-done
+#while true; do
+#  read -r header
+#  [ "$header" == $'\r' ] && break
+#done
+
+# date - use gnu date
+date() {
+  if [[ "$(uname)" == "Darwin" ]]
+  then
+    gdate "${@:1}"
+  else
+    command date "${@:1}"
+  fi
+}
 
 # beertime - why we're really here
 beertime() {
@@ -110,11 +120,16 @@ elif [[ "$path" == '/ock.json' || "$query" == 'type=json' ]]; then # json
 elif [[ "$path" == '/ock' && "$query" == '' || "$query" == 'type=plain' ]]; then
   type='plain'
   contentType='text/plain'
+elif [[ "$path" == '/beer' ]]; then # beer asciiart
+  type='plain'
+  contentType='text/plain'
+  cat "$(dirname "$0")"/beer.asciiart
+  exit 0
 elif [[ "$path" == '/favicon' || "$path" == '/favicon.ico' ]]; then # beer emoji
   altResp=true
   echo 'HTTP/1.1 200 OK'
   echo -e "Content-Type: image/x-icon; charset=binary\n"
-  cat '/root/beeroclock/favicon.ico'
+  cat "$(dirname "$0")"/favicon.ico
   exit 0
 elif [[ "${#query}" -gt 9 ]]; then # Unsupported Content-Type
   altResp=true
