@@ -17,7 +17,7 @@ rerun_options_parse "$@"
 # ----------------------
 
 
-printf "Time for beer!\n"
+"$RERUN_MODULE_DIR/lib/server/service.sh"
 
 
 # Done. Exit with last command exit status.

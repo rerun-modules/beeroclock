@@ -123,7 +123,8 @@ elif [[ "$path" == '/ock' && "$query" == '' || "$query" == 'type=plain' ]]; then
 elif [[ "$path" == '/beer' ]]; then # beer asciiart
   type='plain'
   contentType='text/plain'
-  cat "$(dirname "$0")"/beer.asciiart
+  body=$(cat "$(dirname "$0")"/beer.asciiart)
+  respond "$contentType" "$body"
   exit 0
 elif [[ "$path" == '/favicon' || "$path" == '/favicon.ico' ]]; then # beer emoji
   altResp=true
