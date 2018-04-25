@@ -37,9 +37,12 @@ RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 
 
 RUN mkdir -p /var/lib/beeroclock
-COPY lib/server/service.sh /var/lib/beeroclock/service.sh
+COPY lib/server /var/lib/beeroclock
 COPY lib/server/xinetd.d/beeroclock /etc/xinetd.d/beeroclock
 
-RUN service xinetd start
+RUN echo "beer      28080/tcp           # beer time web service" >> /etc/services
 
-EXPOSE 18080
+EXPOSE 28080
+
+CMD service xinetd start && /bin/bash
+
