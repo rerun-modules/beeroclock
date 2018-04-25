@@ -16,21 +16,8 @@ rerun_options_parse "$@"
 # Command implementation
 # ----------------------
 
-cat <<'EOF'
-        ~  ~
-      ( o )o)
-     ( o )o )o)
-   (o( ~~~~~~~~o
-   ( )' ~~~~~~~'
-   ( )|)       |-.
-     o|     _  |-. \
-     o| |_||_) |  \ \
-      | | ||_) |   | |
-     o|        |  / /
-      |        |." "
-      |        |- '
-      .========.   mb
-EOF
+cat "$RERUN_MODULE_DIR/lib/server/beer.asciiart"
+
 # Done. Exit with last command exit status.
 exit $?
 
