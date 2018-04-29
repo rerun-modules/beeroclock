@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+#/ command: beeroclock:client: "the beeroclock web service client"
+#/ usage: rerun beeroclock:client [ --url <>] 
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: URL
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "client" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+
+
+# Command implementation
+# ----------------------
+
+
+
+# Read the headers
+client:read_headers() {
+	local -a headers=()
+	while read -r line
+	do
+		[[ -z "$line" ]] && break	
+		headers+=( "$line" )
+	done
+	#printf "%s\n" "${body[@]:-}"
+}
+
+# Read the body
+client:read_body() {
+	local -a body=()
+	while read -r line
+	do
+		body+=( "$line" )
+	done
+	printf "%s\n" "${body[@]:-}"
+}
+
+
+client:request() {
+	local url=$1
+	curl -s "$url"
+	return $?
+}
+
+
+
+client:request "$URL"
+
+# Done. Exit with last command exit status.
+exit $?
+
