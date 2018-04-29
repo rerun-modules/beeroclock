@@ -40,7 +40,7 @@ RUN mkdir -p /var/lib/beeroclock
 COPY lib/server /var/lib/beeroclock
 COPY lib/server/xinetd.d/beeroclock /etc/xinetd.d/beeroclock
 
-RUN echo "beer      28080/tcp           # beer time web service" >> /etc/services
+RUN echo "beeroclock 28080/tcp           # beer time web service" >> /etc/services
 
 EXPOSE 28080
 

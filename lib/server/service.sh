@@ -87,11 +87,13 @@ respond() {
     echo "Connection: close"
   fi
   echo "Content-Type: $1; charset=utf-8"
-  echo "Content-Length: ${#2}"
+  let length=${#2}+1
+  echo "Content-Length: ${length}"
   echo 'Link: </favicon.ico>; rel="icon"'
   echo "Host: beero.cl"
   echo "Date: $(TZ=UTC; date '+%a, %d %b %Y %T GMT')"
   echo -e "\n$2"
+  sleep 1
 }
 
 # permRedirect
