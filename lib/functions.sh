@@ -3,13 +3,13 @@
 #
 
 # Read rerun's public functions
-. "$RERUN" || {
-    echo >&2 "ERROR: Failed sourcing rerun function library: \"$RERUN\""
-    return 1
+[[ -n "${RERUN:-}" ]] && {
+	. "$RERUN" || {
+    	echo >&2 "ERROR: Failed sourcing rerun function library: \"$RERUN\""
+	    return 1
+	}
 }
 
-# Check usage. Argument should be command name.
-[[ $# = 1 ]] || rerun_option_usage
 
 # Source the option parser script.
 #
@@ -23,6 +23,4 @@ fi
 # - - -
 # Your functions declared here.
 # - - -
-
-
 
