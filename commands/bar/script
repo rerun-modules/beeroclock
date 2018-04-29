@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 #/ command: beeroclock:bar: "Open a webserver to serve beer to the internet"
-#/ usage: rerun beeroclock:bar [ --close <>] 
+#/ usage: rerun beeroclock:bar [ --close <>] [ --rebuild <>] 
 #/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
-#/ option-variables: CLOSE
+#/ option-variables: CLOSE REBUILD
 
 . "$RERUN_MODULE_DIR/lib/functions.sh" "bar" || { 
   echo >&2 "Failed loading function library." ; exit 1 ; 
@@ -16,25 +16,52 @@ rerun_options_parse "$@"
 # Command implementation
 # ----------------------
 
-# - - -
-# Put the command implementation here.
-# - - -
+bar:close() {
+  [[ ! -e ~/.beeroclock/container.txt ]] && {
+    rerun_log info "Bar already closed."
+    return 0
+  }
+  # Read CONTAINERID value
+  . ~/.beeroclock/container.txt
+  docker stop "$CONTAINERID"
+  rm ~/.beeroclock/container.txt  
+}
 
-if [[ ${CLOSE} == "true" ]]; then
-  if [[ -e ~/.beeroclock/container.txt ]]; then
+bar:rebuild_image() {
+  cd "$RERUN_MODULE_DIR"
+  docker build -t beeroclock .  
+}
+
+bar:status() {
+  if [[ -e ~/.beeroclock/container.txt ]]
+  then
     . ~/.beeroclock/container.txt
-    docker stop ${CONTAINERID}
-    rm ~/.beeroclock/container.txt
+    if ! status=$(docker inspect -f '{{.State.Running}}' "$CONTAINERID")
+    then
+      :; # the container is not running.
+    else
+      [[ "$status" == true ]] && return 0
+    fi
   fi
-else
-  cd $RERUN_MODULE_DIR
-  docker build -t beeroclock .
+  return 1
+}
 
+bar:open() {
+  bar:status && return 0
   val=$(docker run --privileged --detach  -p 127.0.0.1:28080:28080 beeroclock)
-  if [[ ! -e ~/.beeroclock ]]; then
-    mkdir ~/.beeroclock
-  fi
+  [[ ! -e ~/.beeroclock ]] &&  mkdir ~/.beeroclock
   echo "CONTAINERID=${val}" > ~/.beeroclock/container.txt
+}
+
+
+if [[ "$CLOSE" == "true" ]]
+then
+  bar:close
+else
+  [[ "$REBUILD" == "true" ]] && {
+    bar:rebuild_image
+  }
+  bar:status || bar:open
 fi
 
 # Done. Exit with last command exit status.
