@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+#/ command: beeroclock:bar: "Open a webserver to serve beer to the internet"
+#/ usage: rerun beeroclock:bar [ --close <>] 
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: CLOSE
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "bar" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+# Command implementation
+# ----------------------
+
+# - - -
+# Put the command implementation here.
+# - - -
+
+if [[ ${CLOSE} == "true" ]]; then
+  if [[ -e ~/.beeroclock/container.txt ]]; then
+    . ~/.beeroclock/container.txt
+    docker stop ${CONTAINERID}
+    rm ~/.beeroclock/container.txt
+  fi
+else
+  cd $RERUN_MODULE_DIR
+  docker build -t beeroclock .
+
+  val=$(docker run --privileged --detach  -p 127.0.0.1:28080:28080 beeroclock)
+  if [[ ! -e ~/.beeroclock ]]; then
+    mkdir ~/.beeroclock
+  fi
+  echo "CONTAINERID=${val}" > ~/.beeroclock/container.txt
+fi
+
+# Done. Exit with last command exit status.
+exit $?
+
