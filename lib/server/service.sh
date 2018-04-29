@@ -1,5 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 read -r request
+
+[[ "$request" == "quit" ]] && exit 0
+
 #while true; do
 #  read -r header
 #  [ "$header" == $'\r' ] && break
