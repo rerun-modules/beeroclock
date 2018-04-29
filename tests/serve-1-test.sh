@@ -39,7 +39,7 @@ it_serves_beer() {
     rerun beeroclock:serve <<< "GET /beer" > "$OUT"
     grep 'HTTP/1.1 200 OK' "$OUT"
     grep 'Content-Type: text/plain' "$OUT"
-    grep 'Content-Length: 247' "$OUT"
+    grep 'Content-Length: 249' "$OUT"
 }
 
 
