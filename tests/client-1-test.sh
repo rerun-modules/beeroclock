@@ -33,14 +33,14 @@ it_submits_request() {
 
 	if ! container=$(docker run -p 127.0.0.1:28080:28080 --privileged -d beeroclock)
 	then
-		printf >&2 "ERROR: Failure starting container"
+		printf >&2 "ERROR: Failure starting container."
 		return 1
 	fi
 	sleep 5
 
-	if ! json=$(rerun beeroclock:client http://localhost:28080/ock.json)
+	if ! json=$(rerun beeroclock:client --url http://localhost:28080/ock.json)
 	then
-		printf "ERROR: Caught error making client request ...cleaning up and bailing test"
+		printf "ERROR: Caught error making client request ...cleaning up and bailing test."
 		docker kill "$container"
 		return 1
 	fi
