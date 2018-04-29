@@ -23,6 +23,7 @@ RUN apt-get -y update && \
         apt-transport-https \
         wget \
         vim \
+        sysstat \
         xinetd
 
 
@@ -41,8 +42,9 @@ COPY lib/server /var/lib/beeroclock
 COPY lib/server/xinetd.d/beeroclock /etc/xinetd.d/beeroclock
 
 RUN echo "beeroclock 28080/tcp           # beer time web service" >> /etc/services
+RUN touch /var/log/beeroclock.log
 
 EXPOSE 28080
 
-CMD service xinetd start && /bin/bash
+CMD service xinetd start && tail -f /var/log/beeroclock.log
 
