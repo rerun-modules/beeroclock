@@ -17,7 +17,8 @@ it_starts() {
     .  ~/.beeroclock/container.txt
     test "true" = "$(docker inspect -f '{{.State.Running}}' "$CONTAINERID")"
     sleep 2
-    curl http://127.0.0.1:28080/beer
+    # end to end test to see if docker port mapping and xinetd are working
+    curl http://127.0.0.1:28080/beer | grep "========.   mb$" - 
     docker stop "$CONTAINERID"
     rm  ~/.beeroclock/container.txt
 }
