@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 
-read -r request
 
-[[ "$request" == "quit" ]] && exit 0
-
-#while true; do
-#  read -r header
-#  [ "$header" == $'\r' ] && break
-#done
 
 # date - use gnu date
 date() {
@@ -105,6 +98,25 @@ permRedirect() {
   echo 'HTTP/1.1 301 Moved Permanently'
   echo 'Location: http://beero.cl/ock'
 }
+
+# -----------------------------------------------------------------------------
+# Check if this file is being sourced, or executed.
+# If not being executed, return now.
+if [[ "${BASH_SOURCE:-}" != "$0" && "$0" != "bash" ]]
+then
+    return; # Stop sourcing the file here.
+fi
+# -----------------------------------------------------------------------------
+
+read -r request
+
+[[ "$request" == "quit" ]] && exit 0
+
+#while true; do
+#  read -r header
+#  [ "$header" == $'\r' ] && break
+#done
+
 
 # parse url & path
 url="${request#GET }"
