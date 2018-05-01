@@ -12,7 +12,7 @@
 describe "status"
 
 it_status_RUNNING() {
-	cleanup
+    cleanup
 
     rerun beeroclock:start
     test -f ~/.beeroclock/container.txt
@@ -20,18 +20,18 @@ it_status_RUNNING() {
     test -n "$CONTAINERID"
 
     output=$(rerun beeroclock:status)
-    test "$output" = "Status beeroclock: [RUNNING]"
+    echo "$output" | grep "Status beeroclock: \[RUNNING\]"
 }
 
 
 it_status_STOPPED() {
-	cleanup
-	echo "Running status command"
+    cleanup
+    echo "Running status command"
     if ! output=$(rerun beeroclock:status)
     then
-	    test "$output" = "Status beeroclock: [STOPPED]"
-	else
-		echo "Status was not STOPPED"
-		return 1
-	fi
+        echo "$output" | grep "Status beeroclock: \[STOPPED\]"
+    else
+        echo "Status was not STOPPED"
+        return 1
+    fi
 }

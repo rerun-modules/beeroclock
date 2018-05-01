@@ -31,14 +31,14 @@ clock:status() {
 
 if ! clock:status
 then
-	[[ "$QUIET" != "true" ]] && {
-		rerun_log info "Status beeroclock: [STOPPED]"
-		exit 1
-	}
+    [[ "$QUIET" != "true" ]] && {
+        rerun_log info "Status beeroclock: [STOPPED]"
+        exit 1
+    }
 else
-	[[ "$QUIET" != "true" ]] && {
-		rerun_log info "Status beeroclock: [RUNNING]"
-	}
+    [[ "$QUIET" != "true" ]] && {
+        rerun_log info "Status beeroclock: [RUNNING]"
+    }
 fi
 
 # Done. Exit with last command exit status.
