@@ -4,7 +4,7 @@
 NAME=url
 DESCRIPTION="url to webservice"
 ARGUMENTS=true
-REQUIRED=false
+REQUIRED=true
 SHORT=
 LONG=url
 DEFAULT=
