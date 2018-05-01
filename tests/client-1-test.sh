@@ -28,31 +28,45 @@ EOF
 # --------
 describe "client"
 
+it_beer_around_the_world() {
+    . ${RERUN_MODULE_HOME_DIR}/lib/server/service.sh
+    base='Etc/GMT'
+    let i=-12
+    while [[ ${i} -lt 13 ]]; do
+      mid=$([ ${i} -gt 0 ] && echo "+" || echo "")
+      export TZ="${base}${mid}${i}"
+      beertime
+      let i=i+1
+    done
+
+    return 0
+}
+
 
 it_submits_request() {
-	cleanup
-	
-	if ! container=$(docker run -p 127.0.0.1:28080:28080 --privileged -d beeroclock)
-	then
-		printf >&2 "ERROR: Failure starting container."
-		return 1
-	fi
-	sleep 5
+    cleanup
 
-	if ! json=$(rerun beeroclock:client --url http://localhost:28080/ock.json)
-	then
-		printf "ERROR: Caught error making client request ...cleaning up and bailing test."
-		docker kill "$container"
-		return 1
-	fi
-	test -n "$json"
-	jq -e '.' <<< "$json"
+    if ! container=$(docker run -p 127.0.0.1:28080:28080 --privileged -d beeroclock)
+    then
+        printf >&2 "ERROR: Failure starting container."
+        return 1
+    fi
+    sleep 2
 
-	test 'true' = "$(jq '.success'     <<< "$json")"
-	test '200'  = "$(jq '.status_code' <<< "$json")"
-	test '"OK"' = "$(jq '.status_text' <<< "$json")"
+    if ! json=$(rerun beeroclock:client --url http://localhost:28080/ock.json)
+    then
+        printf "ERROR: Caught error making client request ...cleaning up and bailing test."
+        docker kill "$container"
+        return 1
+    fi
+    test -n "$json"
+    jq -e '.' <<< "$json"
 
-	test 'true' = "$(jq '.content | .["beertime?"]' <<< "$json")"
+    test 'true' = "$(jq '.success'     <<< "$json")"
+    test '200'  = "$(jq '.status_code' <<< "$json")"
+    test '"OK"' = "$(jq '.status_text' <<< "$json")"
 
-	docker kill "$container"
+    test 'true' = "$(jq '.content | .["beertime?"]' <<< "$json")"
+
+    docker kill "$container"
 }
