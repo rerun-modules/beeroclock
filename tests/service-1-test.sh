@@ -16,7 +16,8 @@
 describe "service"
 
 it_diffTime() {
-	diffTime
+	t=$(diffTime)
+	test "$t" = 0
 }
 
 it_calculates_beertime(){
@@ -24,5 +25,7 @@ it_calculates_beertime(){
 }
 
 it_caclulates_beer_o_clock(){
-	beer_o_clock
+	beer_o_clock | grep "It's the weekend, you must be out of beer."
+	beer_o_clock 12 12 | grep "Wait... you're not drinking?"
+	beer_o_clock 23 2 | grep "T-minus"
 }
