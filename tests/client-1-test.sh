@@ -36,10 +36,10 @@ it_beer_around_the_world() {
       mid=$([ ${i} -gt 0 ] && echo "+" || echo "")
       export TZ="${base}${mid}${i}"
       beertime
-      let i=i+1
+      i=$(( i + 1 ))
     done
 
-    return 0
+    return 1
 }
 
 
