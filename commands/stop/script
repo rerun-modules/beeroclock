@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+#/ command: beeroclock:stop: "Stop the clock service"
+#/ usage: rerun beeroclock:stop [options]
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: 
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "stop" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+# Command implementation
+# ----------------------
+
+clock:stop() {
+  [[ ! -e ~/.beeroclock/container.txt ]] && {
+    return 0
+  }
+  # Read CONTAINERID value
+  . ~/.beeroclock/container.txt
+  result=$(docker stop "$CONTAINERID")
+  local -i stopped=$?
+
+  rm ~/.beeroclock/container.txt
+
+  return "$stopped"
+}
+
+if ! result=$(clock:stop)
+then
+	rerun_log warn "Stopping beeroclock: [FAIL]"
+else
+	rerun_log info "Status beeroclock: [STOPPED]"
+fi
+
+# Done. Exit with last command exit status.
+exit $?
+

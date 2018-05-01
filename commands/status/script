@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+#/ command: beeroclock:status: "Status the clock service"
+#/ usage: rerun beeroclock:status [ --quiet <>] 
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: QUIET
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "status" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+# Command implementation
+# ----------------------
+clock:status() {
+  if [[ -e ~/.beeroclock/container.txt ]]
+  then
+    . ~/.beeroclock/container.txt
+    if ! status=$(docker inspect -f '{{.State.Running}}' "$CONTAINERID")
+    then
+      :; # the container is not running.
+    else
+      [[ "$status" == true ]] && return 0
+    fi
+  fi
+  return 1
+}
+
+if ! clock:status
+then
+	[[ "$QUIET" != "true" ]] && {
+		rerun_log info "Status beeroclock: [STOPPED]"
+		exit 1
+	}
+else
+	[[ "$QUIET" != "true" ]] && {
+		rerun_log info "Status beeroclock: [RUNNING]"
+	}
+fi
+
+# Done. Exit with last command exit status.
+exit $?
+

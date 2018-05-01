@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+#/ command: beeroclock:start: "Start the clock service"
+#/ usage: rerun beeroclock:start [ --rebuild <>] 
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: REBUILD
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "start" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+# Command implementation
+# ----------------------
+
+clock:rebuild_image() {
+  cd "$RERUN_MODULE_DIR"
+  docker build -t beeroclock .  
+}
+
+clock:start() {
+  local cid=$(docker run --privileged --detach  -p 127.0.0.1:28080:28080 beeroclock)
+  [[ ! -d ~/.beeroclock ]] &&  mkdir ~/.beeroclock
+  echo "CONTAINERID=${cid}" > ~/.beeroclock/container.txt
+}
+
+
+
+[[ "${REBUILD-}" == "true" ]] && {
+    clock:rebuild_image
+}
+
+if ! status=$(rerun beeroclock:status)
+then
+	clock:start
+	rerun_log info "Status beeroclock: [RUNNING]"
+else
+	rerun_log info "$status"
+fi
+
+
+# Done. Exit with last command exit status.
+exit $?
+
