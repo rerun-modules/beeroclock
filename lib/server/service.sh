@@ -28,9 +28,9 @@ beertime() {
       now=$(date -d 'now' '+%F %T %Z')
       local later=
       later=$(date -d "today ${1}:00:00" '+%F %T %Z')
-      local hrsUntil=$(( $(diffTime ${now} ${later}) / 60 / 60 ))
+      local hrsUntil=$(( $(diffTime ${now} ${later}) / 60 / 60 % 24 ))
       now=$(date -d "$now +$hrsUntil hours" '+%F %T %Z')
-      local minUntil=$(( $(diffTime ${now} ${later}) / 60 ))
+      local minUntil=$(( $(diffTime ${now} ${later}) / 60 % 60 ))
 
       echo "T-minus $hrsUntil hour(s) and $minUntil minute(s) until beer o'clock."
     fi

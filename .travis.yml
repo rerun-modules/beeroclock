@@ -12,6 +12,7 @@ addons:
     - fakeroot
     - build-essential
     - devscripts
+    - coreutils
     - autoconf
     - automake
     - dh-make
