@@ -30,7 +30,8 @@ describe "client"
 
 
 it_submits_request() {
-
+	cleanup
+	
 	if ! container=$(docker run -p 127.0.0.1:28080:28080 --privileged -d beeroclock)
 	then
 		printf >&2 "ERROR: Failure starting container."
