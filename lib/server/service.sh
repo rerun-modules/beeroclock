@@ -13,7 +13,8 @@ date() {
 }
 
 diffTime() {
-  printf '%s' $(( $(date -u -d "${2}" +%s) - $(date -u -d "${1}" +%s) ))
+  local now=$1 later=$2
+  printf '%s' $(( $(date -u -d "${later}" +%s) - $(date -u -d "${now}" +%s) ))
 }
 
 beer_o_clock() {
@@ -22,8 +23,6 @@ beer_o_clock() {
   elif [[ "$(( 10#$2 ))" -ge "$1" ]]; then
     echo -e "Wait... you're not drinking?\nIt's $(date '+%H:%M')!\nGrab a fucking lager, ale or something that isn't water."
   else
-
-
     local now=
     now=$(date -d 'now' '+%F %T %Z')
     local later=
@@ -101,6 +100,12 @@ permRedirect() {
   echo 'Location: http://beero.cl/ock'
 }
 
+log() {
+  local message=$1
+  printf "%s: %s\n" "$(date "+%y/%m/%d@%T")" "$message" >> "$LOG"
+}
+
+
 # -----------------------------------------------------------------------------
 # Check if this file is being sourced, or executed.
 # If not being executed, return now.
@@ -110,7 +115,11 @@ then
 fi
 # -----------------------------------------------------------------------------
 
+LOG=/var/log/beeroclock.log
+
 read -r request
+log "REQUEST: $request"
+
 
 [[ "$request" == "quit" ]] && exit 0
 
