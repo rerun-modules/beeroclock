@@ -12,10 +12,10 @@
 describe "serve"
 
 before() {
-	OUT=$(mktemp -t "service-XXX.txt")
+    OUT=$(mktemp -t "service-XXX.txt")
 }
 after() {
-	rm "$OUT"
+    rm "$OUT"
 }
 
 # $ rerun beeroclock: serve
@@ -41,7 +41,3 @@ it_serves_beer() {
     grep 'Content-Type: text/plain' "$OUT"
     grep 'Content-Length: 249' "$OUT"
 }
-
-
-
-

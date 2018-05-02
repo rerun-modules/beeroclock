@@ -16,18 +16,18 @@
 describe "service"
 
 ##it_diffTime() {
-##	t=$(diffTime)
-##	test "$t" = 0
+##    t=$(diffTime)
+##    test "$t" = 0
 ##}
 
 it_calculates_beertime(){
-	beertime
+    beertime
 }
 
 it_caclulates_beer_o_clock(){
-	beer_o_clock | grep "It's the weekend, you must be out of beer."
-	beer_o_clock 12 12 | grep "Wait... you're not drinking?"
-	beer_o_clock 23 2 | grep "T-minus"
+    beer_o_clock | grep "It's the weekend, you must be out of beer."
+    beer_o_clock 12 12 | grep "Wait... you're not drinking?"
+    beer_o_clock 23 2 | grep "T-minus"
 }
 
 it_beer_around_the_world() {
@@ -40,7 +40,7 @@ it_beer_around_the_world() {
 
       beertime
 
-      (( i++ ))
+      (( i++ )) || (( 1 )) # when the counter goes through zero that returns error!
     done
 
     #return 1
