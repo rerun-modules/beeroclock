@@ -28,19 +28,6 @@ EOF
 # --------
 describe "client"
 
-it_beer_around_the_world() {
-    . ${RERUN_MODULE_HOME_DIR}/lib/server/service.sh
-    base='Etc/GMT'
-    let i=-12
-    while [[ ${i} -lt 13 ]]; do
-      mid=$([ ${i} -gt 0 ] && echo "+" || echo "")
-      export TZ="${base}${mid}${i}"
-      beertime
-      i=$(( i + 1 ))
-    done
-
-    return 1
-}
 
 
 it_submits_request() {

@@ -29,3 +29,19 @@ it_caclulates_beer_o_clock(){
 	beer_o_clock 12 12 | grep "Wait... you're not drinking?"
 	beer_o_clock 23 2 | grep "T-minus"
 }
+
+it_beer_around_the_world() {
+    base='Etc/GMT'
+    let i=-12
+    while (( i < 13 ))
+    do
+      mid=$([ ${i} -gt 0 ] && echo "+" || echo "")
+      export TZ="${base}${mid}${i}"
+
+      beertime
+
+      (( i++ ))
+    done
+
+    #return 1
+}
