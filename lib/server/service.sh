@@ -12,24 +12,16 @@ date() {
   fi
 }
 
-diffTime() {
-  local now=$1 later=$2
-  printf '%s' $(( $(date -u -d "${later}" +%s) - $(date -u -d "${now}" +%s) ))
-}
-
 beer_o_clock() {
   if [[ "$1" == "" ]]; then
     echo -e "It's the weekend, you must be out of beer.\nGo get some more beer and afterwards reward yourself with two!"
   elif [[ "$(( 10#$2 ))" -ge "$1" ]]; then
     echo -e "Wait... you're not drinking?\nIt's $(date '+%H:%M')!\nGrab a fucking lager, ale or something that isn't water."
   else
-    local now=
-    now=$(date -d 'now' '+%F %T %Z')
-    local later=
-    later=$(date -d "today ${1}:00:00" '+%F %T %Z')
-    local hrsUntil=$(( $(diffTime ${now} ${later}) / 60 / 60 % 24 ))
-    now=$(date -d "$now +$hrsUntil hours" '+%F %T %Z')
-    local minUntil=$(( $(diffTime ${now} ${later}) / 60 % 60 ))
+    local now=$(date -d 'now' '+%s')
+    local later=$(date -d "today ${1}:00:00" '+%s')
+    local hrsUntil=$(( ( later - now ) / 60 / 60 % 24 ))
+    local minUntil=$(( ( later - now ) / 60 % 60 ))
 
     echo "T-minus $hrsUntil hour(s) and $minUntil minute(s) until beer o'clock."
   fi

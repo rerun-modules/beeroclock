@@ -44,6 +44,9 @@ COPY lib/server/xinetd.d/beeroclock /etc/xinetd.d/beeroclock
 RUN echo "beeroclock 28080/tcp           # beer time web service" >> /etc/services
 RUN touch /var/log/beeroclock.log
 
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 EXPOSE 28080
 
 CMD service xinetd start && tail -f /var/log/beeroclock.log

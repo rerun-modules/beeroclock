@@ -15,10 +15,10 @@
 # --------
 describe "service"
 
-it_diffTime() {
-	t=$(diffTime)
-	test "$t" = 0
-}
+##it_diffTime() {
+##	t=$(diffTime)
+##	test "$t" = 0
+##}
 
 it_calculates_beertime(){
 	beertime
